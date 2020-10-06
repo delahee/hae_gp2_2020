@@ -368,6 +368,10 @@ void subFunction4() {
     }
 }
 
+void subFunction6() {
+    
+}
+
 int main()
 {
     //subFunction0();
@@ -376,7 +380,8 @@ int main()
     //heapSort();
     //subFunction3();
     //subFunction4();
-    subFunction5();
+    //subFunction5();
+    subFunction6();
 
     cout << endl;
 }
