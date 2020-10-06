@@ -10,6 +10,7 @@
 #include "Vec2T.h"
 #include "Arr.h"
 #include "DynArr.h"
+#include "IntArray.h"
 #include "Node.hpp"
 
 using namespace std;
@@ -369,8 +370,11 @@ void subFunction4() {
 }
 
 void subFunction6() {
-    
-}
+    IntArray arrIota = IntArray::iota(6);
+    IntArray arrRand = IntArray::random(6);
+
+    auto stop = 66;
+};
 
 int main()
 {
