@@ -71,21 +71,25 @@ public:
 		return arr;
 	}
 
+	//devoirs : search, push_first push_back 
 	//faire une recherche linéaire
 	//renvoie -1 si pas trouvé
 	//renvoie la position si trouvée
 	//int search( int key ) 
 	//
 
+	//offset the array and 
+	//
+	//void push_back(  int val)
+	//void push_front(  int val)
+
+
 	//recherche de position d'insertion
 	//renvoie la position ou inserer dans le tableau si il était trié.
 	//int searchInsertionPos( int key ) 
 
-	//offset the array and 
-	//void insert( int pos, int val)
-	//void push_back(  int val)
-	//void push_front(  int val)
 
+	//void insert( int pos, int val)
 	//faire une recherche binaire
 	//est ce que j'ai trouvé?
 	//sinon chercher a gauche 
