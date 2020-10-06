@@ -64,6 +64,13 @@ public:
 		return arr;
 	}
 
+	static IntArray random(int sz) {
+		IntArray arr(sz);
+		for (int i = 0; i < sz; i++) 
+			arr(i) = rand();
+		return arr;
+	}
+
 	//faire une recherche linéaire
 	//renvoie -1 si pas trouvé
 	//renvoie la position si trouvée
