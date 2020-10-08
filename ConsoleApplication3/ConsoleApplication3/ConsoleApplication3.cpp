@@ -12,6 +12,7 @@
 #include "DynArr.h"
 #include "IntArray.h"
 #include "Node.hpp"
+#include "Lib.hpp"
 
 using namespace std;
 
@@ -373,6 +374,112 @@ void subFunction6() {
     IntArray arrIota = IntArray::iota(6);
     IntArray arrRand = IntArray::random(6);
 
+    {
+        IntArray arr;
+        arr.push_back(128);
+        arr.push_front(5);
+    }
+
+    {
+        IntArray arr;
+        arr.push_front(6);
+        arr.insert(0,3);
+        arr.insert(20,8);
+        auto stop = 66;
+    }
+
+    {
+        IntArray arr = IntArray::iota(12);
+        if (!arr.isSortedIter())
+            throw "wut? iter";
+
+        if (!arr.isSortedRec())
+            throw "wut? rec";
+    }
+
+    {
+        IntArray arr = IntArray::random(12);
+        if (arr.isSortedRec())
+            throw "wut? rec";
+    }
+
+    {
+        IntArray arr;
+        
+        for (int i = 0; i < 1000; ++i) {
+            int val = rand() % 150;
+            int pos = arr.searchInsertionPosRec(val );
+            arr.insert(pos, val);
+        }
+
+        if( ! arr.isSortedIter()) {
+            throw "not sorted invariant is broken ?";
+        }
+
+        auto stop = 66;
+    }
+
+    
+
+    {
+        IntArray arr;
+        arr.push_back(6);
+        arr.push_back(6);
+        arr.push_back(6);
+
+        if (arr.binarySearch(77)) {
+            throw "wtf?";
+        }
+    }
+
+    {
+        IntArray arr;
+        arr.push_back(5);
+        arr.push_back(6);
+        arr.push_back(8);
+        arr.push_back(8);
+        arr.push_back(8);
+        arr.push_back(8);
+        arr.push_back(9);
+        arr.push_back(10);
+
+        int start = 0;
+        
+        if (!arr.binarySearch(5)) {
+            throw "wtf?";
+        }
+        if (!arr.binarySearch(6)) {
+            throw "wtf?";
+        }
+        if (!arr.binarySearch(9)) {
+            throw "wtf?";
+        }
+        if (!arr.binarySearch(10)) {
+            throw "wtf?";
+        }
+        if (arr.binarySearch(4)) {
+            throw "wtf?";
+        }
+        if (arr.binarySearch(0)) {
+            throw "wtf?";
+        }
+        if (arr.binarySearch(12)) {
+            throw "wtf?";
+        }
+        if (arr.binarySearch(7)) {
+            throw "wtf?";
+        }
+        auto stop = 66;
+
+    }
+   
+    IntArray arr = IntArray::random(14000);
+    double val0 = Lib::getTimeStamp();
+    arr.sortInPlace();
+    double val1 = Lib::getTimeStamp();
+    cout << "temps ecoule : " << (val1 - val0) << "s" << endl;
+
+    
     auto stop = 66;
 };
 

@@ -149,6 +149,7 @@
     <ClInclude Include="Arr.h" />
     <ClInclude Include="DynArr.h" />
     <ClInclude Include="IntArray.h" />
+    <ClInclude Include="Lib.hpp" />
     <ClInclude Include="Node.hpp" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="Vec2T.h" />
