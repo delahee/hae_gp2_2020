@@ -9,14 +9,17 @@
 using namespace std;
 using namespace sf;
 
+
 int main()
 {
     std::cout << "Hello World!\n";
-    sf::RenderWindow window(sf::VideoMode(640, 480,32), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode(1280, 720,32), "SFML works!");
 
     sf::Text text;
-
+    sf::VertexArray line;
     sf::Font font;
+    std::vector<Vector2f> myPoints;
+
     if (!font.loadFromFile("res/MAIAN.TTF")) {
         std::cout << "ERROR NO FONT" << std::endl;
         return 1;
@@ -34,10 +37,12 @@ int main()
             else if (event.type == sf::Event::KeyPressed) {
                 //si backspace 
                 //reset tout les points
+                //myPoints.clear()
             }
             
             if (event.type == sf::Event::MouseButtonPressed) {
                //ajouter un point
+                //myPoints.push_back
             }
 
         }
@@ -49,16 +54,21 @@ int main()
         // "Nb de points courants"
         
         text.setFont(font);
-        text.setString("toto");
+        text.setString("Touche Backspace pour supprimer les points");
         text.setCharacterSize(24);
-        text.setPosition(10, 10);
+        text.setPosition(0, 0);
         text.setFillColor(sf::Color::White);
+
+        line.clear();
+        line.setPrimitiveType(sf::PrimitiveType::Lines);
+        line.append(sf::Vertex(sf::Vector2f(50, 50),sf::Color(0x5DFFA3ff)));
+        line.append(sf::Vertex(sf::Vector2f(500, 500),sf::Color(0xF5363Cff)));
 
         window.clear();
         
         window.draw(text);
-        //window.draw(mespoints);
-        //window.draw(montexte de docs);
+        window.draw(line);
+
         window.display();
     }
 
