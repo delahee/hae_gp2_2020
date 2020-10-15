@@ -144,6 +144,9 @@
   <ItemGroup>
     <ClCompile Include="sfml_test.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Interp.hpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

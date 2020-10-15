@@ -5,6 +5,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include "Interp.hpp"
 
 using namespace std;
 using namespace sf;
@@ -48,7 +49,17 @@ int main()
             if (event.type == sf::Event::MouseButtonPressed) {
                //ajouter un point
                //add a vertex
-                Vertex v(Vector2f(event.mouseButton.x, event.mouseButton.y), Color(0x5DFFA3ff));
+
+                static int colors[] = {
+                    0x59EB7F,
+                    0xE4F55D,
+                    0xDEB65F,
+                    0xF57F5D,
+                    0xEB37E5 };
+                
+                static int choice = 0;
+                choice = (choice+1)%5;
+                Vertex v(Vector2f(event.mouseButton.x, event.mouseButton.y), Color((colors[choice]<<8) | 0xff));
                 myPoints.push_back(v);
             }
             
@@ -62,8 +73,34 @@ int main()
 
         //recreate all the line each frame
         line.clear();
-        for (Vertex& vtx : myPoints) 
-            line.append(vtx);
+
+        if( myPoints.size()>1)
+        for (int i = 0; i < myPoints.size() ;i++) {
+            //recuperer vtx i -1
+            //recuperer vtx i 
+            //recuperer vtx i + 1
+            //recuperer vtx i + 2
+            sf::Vertex v0 = (i == 0) ? myPoints[i] : myPoints[i-1];//i-1
+            sf::Vertex v1 = myPoints[i];//i
+            sf::Vertex v2 = ((i + 1) >= myPoints.size()) ? myPoints[myPoints.size() - 1] : myPoints[i + 1];//i;
+            sf::Vertex v3 = ((i + 2) >= myPoints.size()) ? myPoints[myPoints.size() - 1] : myPoints[i + 2];//i
+
+            //pour j  de 0...20
+            //  t vaut 1 / j
+            //  inserer catmull( v i-1, v i, v i +1, vi +2 , j / 20.0 ) 
+            for (int j = 0; j <= 20; j++) {
+                float t = j/20.0;
+                sf::Vector2f pos = Interp::c2(v0.position, v1.position, v2.position, v3.position, t); 
+
+                sf::Color col;
+                col.a = 255;
+                col.r = Interp::catmull( v0.color.r, v1.color.r, v2.color.r, v3.color.r, t);
+                col.g = Interp::catmull( v0.color.g, v1.color.g, v2.color.g, v3.color.g, t);;
+                col.b = Interp::catmull( v0.color.b, v1.color.b, v2.color.b, v3.color.b, t);;
+
+                line.append(sf::Vertex(pos, col));
+            }
+         }
         
         window.clear();
         
