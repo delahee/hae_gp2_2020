@@ -12,16 +12,20 @@ using namespace sf;
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    cout << "Hello World!\n";
     sf::RenderWindow window(sf::VideoMode(1280, 720,32), "SFML works!");
 
-    sf::Text text;
-    sf::VertexArray line;
-    sf::Font font;
-    std::vector<Vector2f> myPoints;
+    Text text;
+    Font font;
+    vector<Vertex> myPoints;
+   
+    VertexArray line(PrimitiveType::LineStrip);
+    myPoints.push_back(Vertex(Vector2f(50, 50), Color(0x5DFFA3ff)));
+    myPoints.push_back(Vertex(Vector2f(500, 500), Color(0xF5363Cff)));
+    myPoints.push_back(Vertex(Vector2f(50, 500), Color(0xF5363Cff)));
 
     if (!font.loadFromFile("res/MAIAN.TTF")) {
-        std::cout << "ERROR NO FONT" << std::endl;
+        cout << "ERROR NO FONT" << endl;
         return 1;
     }
 
@@ -37,33 +41,30 @@ int main()
             else if (event.type == sf::Event::KeyPressed) {
                 //si backspace 
                 //reset tout les points
-                //myPoints.clear()
+                if( event.key.code == sf::Keyboard::Key::BackSpace)
+                    myPoints.clear();
             }
             
             if (event.type == sf::Event::MouseButtonPressed) {
                //ajouter un point
-                //myPoints.push_back
+               //add a vertex
+                Vertex v(Vector2f(event.mouseButton.x, event.mouseButton.y), Color(0x5DFFA3ff));
+                myPoints.push_back(v);
             }
-
+            
         }
-        //dessiner le tableau de point avec la classe sf:: VertexArray
-        
-        //afficher la doc
-
-        // "Backspace pour remettre les point a 0"
-        // "Nb de points courants"
         
         text.setFont(font);
         text.setString("Touche Backspace pour supprimer les points");
         text.setCharacterSize(24);
         text.setPosition(0, 0);
-        text.setFillColor(sf::Color::White);
+        text.setFillColor(Color::White);
 
+        //recreate all the line each frame
         line.clear();
-        line.setPrimitiveType(sf::PrimitiveType::Lines);
-        line.append(sf::Vertex(sf::Vector2f(50, 50),sf::Color(0x5DFFA3ff)));
-        line.append(sf::Vertex(sf::Vector2f(500, 500),sf::Color(0xF5363Cff)));
-
+        for (Vertex& vtx : myPoints) 
+            line.append(vtx);
+        
         window.clear();
         
         window.draw(text);
