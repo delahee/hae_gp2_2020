@@ -51,7 +51,7 @@ int main()
 		}
         sf::Event event;
 
-        while (window.pollEvent(event))
+        while (window.pollEvent(event))//sort un evenement de la liste pour le traiter
             g.processInput(event);
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)) {
