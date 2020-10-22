@@ -7,7 +7,7 @@
 #include "SFML/Window.hpp"
 
 #include "Particle.hpp"
-
+#include "ParticleMan.hpp"
 
 using namespace sf;
 
@@ -23,8 +23,8 @@ public:
 
 	bool				closing = false;
 
-	std::vector<Particle> parts;
-
+	ParticleMan beforeParts;
+	ParticleMan afterParts;
 
 	Game(sf::RenderWindow * win) {
 		this->win = win;
@@ -62,82 +62,32 @@ public:
 		}
 	}
 
-	void pollInput(double dt) {
-		sf::Vector2f ppos = player.getPosition();
-		float speed = 600;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z)) 
-			ppos.y-= dt * speed;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q))
-			ppos.x -= dt * speed;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-			ppos.y += dt * speed;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-			ppos.x += dt * speed;
+	bool wasPressed = false;
 
-		
+	void spawnFumes();
 
-		player.setPosition(ppos);
+	void pollInput(double dt);
 
-		Vector2i mPos = sf::Mouse::getPosition(*win);
-		float angle = atan2f(mPos.y - ppos.y, mPos.x - ppos.x);
-		printf("mPos %d %d\n", mPos.x, mPos.y);
-		printf("angle %f\n",angle);
-		cannon.setRotation( (angle / (2 * Lib::pi())) * 360);
-		//cannon.setRotation(90);
-		ppos.x += 8;
-		ppos.y += 4;
-		cannon.setPosition(ppos);
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
-			
-			Vector2f dir(mPos.x - ppos.x, mPos.y - ppos.y);
-			Vector2f pos(ppos.x, ppos.y);
-
-			Vector2f ndir = dir;
-			double len = sqrt(ndir.x*ndir.x + ndir.y * ndir.y);
-			if (len <= 0.0)
-				len = 1.0;
-			ndir.x /= len;
-			ndir.y /= len;
-
-			pos.x += ndir.x * 48;
-			pos.y += ndir.y * 48;
-
-			spawnParticle(pos, ndir);
-		}
-	}
-
-	void spawnParticle(Vector2f pos, Vector2f dir) {
-		Particle p;
-		p.x = pos.x;
-		p.y = pos.y;
-
-		p.dx = dir.x * 60 * 10;
-		p.dy = dir.y * 60 * 10;
-		parts.push_back(p);
-	}
+	void spawnBullet(Vector2f pos, Vector2f dir);
 
 	void update( double dt ) {
 		pollInput(dt);
 
-		for (auto iter = parts.begin(); iter != parts.end(); ) {
-			Particle & p = *iter;
-			p.update(dt);
-			if (p.destroyed)
-				iter = parts.erase(iter);
-			else
-				iter++;
-		}
+		beforeParts.update(dt);
+		afterParts.update(dt);
 	}
 
 	void draw(sf::RenderWindow& win) {
 		if (closing) return;
+
+
 		win.draw(bg);
+
+		beforeParts.draw(win);
+
 		win.draw(player);
 		win.draw(cannon);
 
-		for (Particle & p : parts) {
-			win.draw(p.el);
-		}
+		afterParts.draw(win);
 	}
 };

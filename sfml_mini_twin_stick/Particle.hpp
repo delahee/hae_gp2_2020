@@ -1,6 +1,9 @@
 #pragma once
 
 #include "SFML/Graphics.hpp"
+#include "Lib.hpp"
+#include "Dice.hpp"
+#include <functional>
 
 using namespace sf;
 class Particle {
@@ -20,6 +23,8 @@ public:
 
 	bool			destroyed = false;
 
+	std::function<void(Particle * lthis, float dt)> bhv;
+
 	Particle() {
 		el = RectangleShape(Vector2f(8, 8));
 		el.setOrigin(4, 4);
@@ -38,15 +43,8 @@ public:
 		
 		el.setScale(scaleX, scaleY);
 
-		if (life <= 10.0) {
-			dx *= 0.98;
-			dy *= 0.98;
-		}
-
-		if (life <= 20.0) {
-			scaleX *= 0.95;
-			scaleY *= 0.95;
-		}
+		
+		bhv(this,dt);
 
 		if (el.getSize().x <= 0.1 || el.getSize().x <= 0.1) {
 			destroyed = true;
