@@ -4,6 +4,14 @@
 
 using namespace sf;
 
+enum Cmd{
+	Advance,
+	Backward,
+	TurnLeft45,
+	TurnRight45,
+};
+
+
 class Turtle {
 
 public:
@@ -88,4 +96,7 @@ public:
 		this->angle += angle;
 		direction.setRotation(this->angle);
 	}
+
+	void reset();
+	void play(std::vector<Cmd> execute);
 };

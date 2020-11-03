@@ -42,7 +42,6 @@ public:
 		life -= dt;
 		
 		el.setScale(scaleX, scaleY);
-
 		
 		bhv(this,dt);
 

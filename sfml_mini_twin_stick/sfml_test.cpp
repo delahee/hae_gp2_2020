@@ -5,6 +5,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include <SFML/Audio.hpp>
 #include "Dice.hpp"
 #include "Lib.hpp"
 #include "Game.hpp"
@@ -24,6 +25,14 @@ int main()
         cout << "ERROR NO FONT" << endl;
         return 1;
     }
+
+	sf::Music music;
+
+	if (!music.openFromFile("res/credits.ogg")) {
+		cout << "ERROR cannot open music" << endl;
+		return 1;
+	}
+	music.play();
     Game g(&window);
 
 	Vector2i winPos;

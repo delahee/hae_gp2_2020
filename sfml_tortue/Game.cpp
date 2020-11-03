@@ -20,6 +20,16 @@ void Game::processInput(sf::Event ev) {
 		
 		if (ev.key.code == sf::Keyboard::Key::D)
 			turtle.turnRight(45);
+
+		if (ev.key.code == sf::Keyboard::Key::R) {
+			turtle.reset();
+		}
+
+		if (ev.key.code == sf::Keyboard::Key::T) {
+			vector<Cmd> cmds = { Cmd::Advance, Cmd::Advance, Cmd::Advance, Cmd::Advance,Cmd::TurnLeft45, Cmd::Advance };
+			turtle.reset();
+			turtle.play(cmds);
+		}
 	}
 }
 
