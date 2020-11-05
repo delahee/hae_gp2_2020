@@ -4,7 +4,7 @@
 
 using namespace sf;
 
-enum Cmd{
+enum Cmd {
 	Advance,
 	Backward,
 	TurnLeft45,
@@ -18,6 +18,8 @@ public:
 	float				angle = 0;
 	sf::CircleShape		shape;
 	sf::RectangleShape	direction;
+
+	std::vector<Cmd>	cmdBuffer;
 
 	Turtle() {
 		shape = sf::CircleShape(64);
@@ -40,6 +42,9 @@ public:
 
 	float DEG_TO_RAD = 1.0 / 360 * 2 * 3.141569;//on ramene le nombre entre 0 et 1 
 	float RAD_TO_DEG = 1.0 / 2 * 3.141569 * 360;
+
+	double life = 0.0;
+	void update(double dt);
 
 	void draw(sf::RenderWindow & win) {
 		angle = fmodf(angle , 360);
@@ -88,15 +93,17 @@ public:
 	}
 
 	void turnLeft(float angle) {
-		this->angle += angle;
+		this->angle -= angle;
 		direction.setRotation(this->angle);
 	}
 
 	void turnRight(float angle) {
-		this->angle += angle;
-		direction.setRotation(this->angle);
+		turnLeft(-angle);
 	}
 
 	void reset();
+
+	void play(Cmd execute);
 	void play(std::vector<Cmd> execute);
+	void playProgressive(std::vector<Cmd> & execute);
 };

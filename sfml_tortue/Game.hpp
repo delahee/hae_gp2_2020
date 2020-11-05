@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>;
+#include <vector>
 
 #include "SFML/Graphics.hpp"
 #include "SFML/System.hpp"
@@ -51,6 +51,7 @@ public:
 		pollInput(dt);
 
 		beforeParts.update(dt);
+		turtle.update(dt);
 		afterParts.update(dt);
 	}
 
