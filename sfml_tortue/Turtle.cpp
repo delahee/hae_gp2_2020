@@ -9,12 +9,20 @@ void Turtle::update(double dt){
 			life = 0;
 		}
 	}
+
+	angle = (targetAngle - angle) * 0.12 + angle;
+	Vector2f position = shape.getPosition();
+	position.x = (targetPosition.x - position.x) * 0.1 + position.x;
+	position.y = (targetPosition.y - position.y) * 0.1 + position.y;
+	_setPosition(position);
+	direction.setRotation(angle);
 }
 
 void Turtle::reset()
 {
-	angle = 0;
+	targetAngle = angle = 0;
 	shape.setPosition(400, 400);
+	targetPosition = shape.getPosition();
 	direction.setRotation(angle);
 }
 
@@ -23,8 +31,8 @@ void Turtle::play(Cmd exe) {
 	{
 		case Advance:		advance(30);		break;
 		case Backward:		backward(30);		break;
-		case TurnLeft45:	turnLeft(45);		break;
-		case TurnRight45:	turnRight(45);		break;
+		case TurnLeft45:	turnProgressive(45);		break;
+		case TurnRight45:	turnProgressive(-45);		break;
 		default:
 			break;
 	}

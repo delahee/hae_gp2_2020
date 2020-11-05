@@ -16,10 +16,14 @@ class Turtle {
 
 public:
 	float				angle = 0;
+	float				targetAngle = 0;
+	Vector2f			targetPosition;
+
 	sf::CircleShape		shape;
 	sf::RectangleShape	direction;
 
 	std::vector<Cmd>	cmdBuffer;
+
 
 	Turtle() {
 		shape = sf::CircleShape(64);
@@ -27,6 +31,7 @@ public:
 		shape.setOutlineColor(sf::Color(0x59EB7Fff));
 		shape.setOutlineThickness(2);
 		shape.setPosition(400, 400);
+		targetPosition = shape.getPosition();
 		shape.setOrigin(32, 32);
 
 		direction = sf::RectangleShape(Vector2f(64, 8));
@@ -57,6 +62,7 @@ public:
 		pos.x += 32;//on peut ecrire dans pos, il est passé par copie, donc la translation ne remontera pas dans game
 		pos.y += 32;
 		direction.setPosition(pos);
+		targetPosition = pos;
 	}
 
 	Vector2f directionFromAngle(float angle) {
@@ -75,7 +81,8 @@ public:
 		sf::Vector2f pos = getPosition();
 		pos.x += moveTransformed.x;
 		pos.y += moveTransformed.y;
-		setPosition(pos);
+		//setPosition(pos);
+		targetPosition = pos;
 	};
 
 	void advance(int nbPixel) {
@@ -85,7 +92,8 @@ public:
 		dir.y *= nbPixel;
 		pos.x += dir.x;
 		pos.y += dir.y;
-		setPosition(pos);
+		//setPosition(pos);
+		targetPosition = pos;
 	}
 
 	void backward(int nbPixel) {
@@ -101,9 +109,21 @@ public:
 		turnLeft(-angle);
 	}
 
+	void turnProgressive(float angle) {
+		targetAngle += angle;
+	}
+
 	void reset();
 
 	void play(Cmd execute);
 	void play(std::vector<Cmd> execute);
 	void playProgressive(std::vector<Cmd> & execute);
+
+	private:
+		void _setPosition(sf::Vector2f pos) {
+			shape.setPosition(pos);
+			pos.x += 32;//on peut ecrire dans pos, il est passé par copie, donc la translation ne remontera pas dans game
+			pos.y += 32;
+			direction.setPosition(pos);
+		}
 };
