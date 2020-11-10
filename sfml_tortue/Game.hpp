@@ -47,23 +47,10 @@ public:
 	void pollInput(double dt);
 	void onSpacePressed();
 
-	void update( double dt ) {
-		pollInput(dt);
+	void update(double dt);
 
-		beforeParts.update(dt);
-		turtle.update(dt);
-		afterParts.update(dt);
-	}
+	void draw(sf::RenderWindow& win);
 
-	void draw(sf::RenderWindow& win) {
-		if (closing) return;
-
-		win.draw(bg);
-
-		beforeParts.draw(win);
-
-		turtle.draw(win);
-
-		afterParts.draw(win);
-	}
+	void parse();
+	void onFileTick();
 };

@@ -9,6 +9,9 @@ enum Cmd {
 	Backward,
 	TurnLeft45,
 	TurnRight45,
+
+	DrawOn,
+	DrawOff,
 };
 
 
@@ -24,6 +27,7 @@ public:
 
 	std::vector<Cmd>	cmdBuffer;
 
+	std::vector< sf::CircleShape>  steps;
 
 	Turtle() {
 		shape = sf::CircleShape(64);
@@ -49,10 +53,14 @@ public:
 	float RAD_TO_DEG = 1.0 / 2 * 3.141569 * 360;
 
 	double life = 0.0;
+	bool isDrawing = false;
+
 	void update(double dt);
 
 	void draw(sf::RenderWindow & win) {
 		angle = fmodf(angle , 360);
+		for (CircleShape & cs : steps) //une reference pour pas faire des copies en trop
+			win.draw(cs);
 		win.draw(shape);
 		win.draw(direction);
 	}
@@ -113,6 +121,16 @@ public:
 		targetAngle += angle;
 	}
 
+	void drawOn() {
+		isDrawing = true;
+	}
+
+
+	void drawOff() {
+		isDrawing = false;
+	}
+
+
 	void reset();
 
 	void play(Cmd execute);
@@ -120,10 +138,5 @@ public:
 	void playProgressive(std::vector<Cmd> & execute);
 
 	private:
-		void _setPosition(sf::Vector2f pos) {
-			shape.setPosition(pos);
-			pos.x += 32;//on peut ecrire dans pos, il est passé par copie, donc la translation ne remontera pas dans game
-			pos.y += 32;
-			direction.setPosition(pos);
-		}
+		void _setPosition(sf::Vector2f pos);
 };

@@ -29,28 +29,7 @@ void Game::processInput(sf::Event ev) {
 		}
 
 		if (ev.key.code == sf::Keyboard::Key::F) {
-			FILE * cmd = fopen("res/cmd.txt", "r");
-			if (!cmd) {
-				//
-				printf("no such file res/cmd.txt\n");
-			}
-			else {
-				vector<Cmd> cmds;
-				int retVal = 0;
-				do {
-					char _cmd[128] = {};
-					retVal = fscanf(cmd, "%s", _cmd);
-					string strCmd(_cmd);
-					if( strCmd == "Advance" )		cmds.push_back(Advance);
-					if( strCmd == "Backward" )		cmds.push_back(Backward);
-					if( strCmd == "TurnLeft45" )	cmds.push_back(TurnLeft45);
-					if( strCmd == "TurnRight45" )	cmds.push_back(TurnRight45);
-				} while (retVal != EOF);
-
-				turtle.reset();
-				turtle.playProgressive(cmds);
-			}
-
+			parse();
 		}
 		// ouvrir le descripteur de fichier
 		//
@@ -69,9 +48,48 @@ void Game::processInput(sf::Event ev) {
 	}
 }
 
-void Game::pollInput(double dt) {
-	
+ void Game::draw(sf::RenderWindow & win) {
+	if (closing) return;
 
+	win.draw(bg);
+
+	beforeParts.draw(win);
+
+	turtle.draw(win);
+
+	afterParts.draw(win);
+}
+
+void Game::parse() {
+	FILE * cmd = fopen("res/cmd.txt", "r");
+	if (!cmd) {
+		//
+		printf("no such file res/cmd.txt\n");
+	}
+	else {
+		vector<Cmd> cmds;
+		int retVal = 0;
+		do {
+			char _cmd[128] = {};
+			retVal = fscanf(cmd, "%s", _cmd);
+			string strCmd(_cmd);
+			if (strCmd == "Advance")			cmds.push_back(Advance);
+			else if (strCmd == "Backward")		cmds.push_back(Backward);
+			else if (strCmd == "TurnLeft45")	cmds.push_back(TurnLeft45);
+			else if (strCmd == "TurnRight45")	cmds.push_back(TurnRight45);
+			else if (strCmd == "DrawOn")		cmds.push_back(DrawOn);
+			else if (strCmd == "DrawOff")		cmds.push_back(DrawOff);
+			else {
+				printf("does not understand cmd %s", _cmd);
+				break;
+			}
+		} while (retVal != EOF);
+
+		turtle.reset();
+		turtle.playProgressive(cmds);
+	}
+}
+void Game::pollInput(double dt) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
 		if (!wasPressed) {
 			onSpacePressed();
@@ -85,5 +103,32 @@ void Game::pollInput(double dt) {
 }
 
 void Game::onSpacePressed() {
+	
+}
 
+static time_t lastModification = 0;
+
+void Game::onFileTick() {
+	struct stat statDesc;
+	stat("res/cmd.txt", &statDesc);
+
+	if (lastModification < statDesc.st_mtime) {
+		parse();
+		lastModification = statDesc.st_mtime;
+	}
+}
+
+static float timer = 0.0;
+void Game::update(double dt) {
+	pollInput(dt);
+
+	beforeParts.update(dt);
+	turtle.update(dt);
+	afterParts.update(dt);
+
+	timer -= dt;
+	if (timer <= 0.0) {
+		onFileTick();
+		timer = 0.1;
+	}
 }
