@@ -8,19 +8,17 @@
 
 #include "Particle.hpp"
 #include "ParticleMan.hpp"
-#include "Turtle.hpp"
-
+#include "Char.hpp"
 
 using namespace sf;
 
 class Game {
 public:
-
 	sf::RenderWindow*	win = nullptr;
-	Turtle				turtle;
-
 	sf::RectangleShape  bg;
 	sf::Texture			tex;
+
+	Char				mario;
 
 	bool				closing = false;
 
@@ -37,13 +35,12 @@ public:
 		}
 		bg.setTexture(&tex);
 		bg.setSize(sf::Vector2f(1280, 720));
+
+		mario.setPosition((int)1280 * 0.5, 720);
 	}
 
 	void processInput(sf::Event ev);
-
 	bool wasPressed = false;
-
-
 	void pollInput(double dt);
 	void onSpacePressed();
 
@@ -51,6 +48,5 @@ public:
 
 	void draw(sf::RenderWindow& win);
 
-	void parse();
 	void onFileTick();
 };

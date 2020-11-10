@@ -147,6 +147,7 @@
     <ClCompile Include="Turtle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Char.hpp" />
     <ClInclude Include="Dice.hpp" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="Interp.hpp" />
