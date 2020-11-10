@@ -22,21 +22,13 @@ public:
 	int cy = 0;
 	float ry = 0.0;
 
-	void setPosition(int rpx, int rpy) {
-		cx = rpx / GRID_SIZE;
-		rx = rpx - (cx * GRID_SIZE);
-
-		cy = rpy / GRID_SIZE;
-		ry = rpy - (cy * GRID_SIZE);
-	}
+	void setPosition(int rpx, int rpy);
 
 	Vector2f getPositionPixel() {
 		return Vector2f(cx*GRID_SIZE + rx * GRID_SIZE, cy*GRID_SIZE + ry * GRID_SIZE);
 	}
 
-	void update(double dt) {
-		spr.setPosition(getPositionPixel());
-	}
+	void update(double dt);
 
 	void draw(sf::RenderWindow & win) {
 			win.draw(spr);

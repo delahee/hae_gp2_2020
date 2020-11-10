@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Char.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="sfml_test.cpp" />
     <ClCompile Include="Turtle.cpp" />

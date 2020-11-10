@@ -12,24 +12,22 @@ void Game::processInput(sf::Event ev) {
 	}
 	if (ev.type == sf::Event::KeyReleased) {
 		if (ev.key.code == sf::Keyboard::Key::Z) {
-			//turtle.advance(30);
-			//turtle.advance2(30);
 		}
 			
 		if (ev.key.code == sf::Keyboard::Key::S) {
-			//turtle.backward(30);
+			
 		}
 		
 		if (ev.key.code == sf::Keyboard::Key::Q) {
-			//turtle.turnLeft(45);
+			//mario.rx -= 0.1;
 		}
 		
 		if (ev.key.code == sf::Keyboard::Key::D) {
-			//turtle.turnRight(45);
+			//mario.rx += 0.1;
 		}
 
 		if (ev.key.code == sf::Keyboard::Key::R) {
-			//turtle.reset();
+			mario.setPosition(640, 720);
 		}
 
 		if (ev.key.code == sf::Keyboard::Key::F) {
@@ -62,6 +60,13 @@ void Game::processInput(sf::Event ev) {
 }
 
 void Game::pollInput(double dt) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q)) {
+		mario.rx -= 0.5 * dt  * 60.0;
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
+		mario.rx += 0.5 * dt  * 60.0;
+	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
 		if (!wasPressed) {
 			onSpacePressed();
