@@ -22,22 +22,16 @@ public:
 
 	bool				closing = false;
 
+	
+	std::vector<sf::Vector2i>		walls;
+	std::vector<sf::RectangleShape> wallSprites;
+
 	ParticleMan beforeParts;
 	ParticleMan afterParts;
 
-	Game(sf::RenderWindow * win) {
-		this->win = win;
-		bg = sf::RectangleShape(Vector2f(win->getSize().x, win->getSize().y));
-		
-		bool isOk = tex.loadFromFile("res/bg.jpg");
-		if (!isOk) {
-			printf("ERR : LOAD FAILED\n");
-		}
-		bg.setTexture(&tex);
-		bg.setSize(sf::Vector2f(1280, 720));
+	Game(sf::RenderWindow * win);
 
-		mario.setPosition((int)1280 * 0.5, 720);
-	}
+	void cacheWalls();
 
 	void processInput(sf::Event ev);
 	bool wasPressed = false;

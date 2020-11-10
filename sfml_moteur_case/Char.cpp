@@ -1,5 +1,13 @@
 #include "Char.hpp"
 
+void Char::setCellPosition(int cx, int cy)
+{
+	rx = 0.5;
+	ry = 0.0;
+	this->cx = cx;
+	this->cy = cy;
+}
+
 void Char::setPosition(int rpx, int rpy) {
 	cx = rpx / GRID_SIZE;
 	rx = rpx - (cx * GRID_SIZE);

@@ -22,6 +22,7 @@ public:
 	int cy = 0;
 	float ry = 0.0;
 
+	void setCellPosition(int cx, int cy);
 	void setPosition(int rpx, int rpy);
 
 	Vector2f getPositionPixel() {

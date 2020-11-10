@@ -4,6 +4,38 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
+Game::Game(sf::RenderWindow * win) {
+	this->win = win;
+	bg = sf::RectangleShape(Vector2f(win->getSize().x, win->getSize().y));
+
+	bool isOk = tex.loadFromFile("res/bg.jpg");
+	if (!isOk) {
+		printf("ERR : LOAD FAILED\n");
+	}
+	bg.setTexture(&tex);
+	bg.setSize(sf::Vector2f(1280, 720));
+
+	int cols = 1280 / Char::GRID_SIZE;
+	int lastLine = 720 / Char::GRID_SIZE - 1;
+	for (int i = 0; i < 1280 / Char::GRID_SIZE; ++i) {
+		walls.push_back( Vector2i(i, lastLine) );
+	}
+	cacheWalls();
+	//mario.setPosition((int)1280 * 0.5, 720);
+	mario.setCellPosition(cols>>1, lastLine);
+}
+
+void Game::cacheWalls()
+{
+	wallSprites.clear();
+	for (Vector2i & w : walls) {
+		sf::RectangleShape rect(Vector2f(16,16));
+		rect.setPosition(w.x * Char::GRID_SIZE, w.y * Char::GRID_SIZE);
+		rect.setFillColor(sf::Color(0x07ff07ff));
+		wallSprites.push_back(rect);
+	}
+}
+
 void Game::processInput(sf::Event ev) {
 	if (ev.type == sf::Event::Closed) {
 		win->close();
@@ -53,6 +85,8 @@ void Game::processInput(sf::Event ev) {
 
 	beforeParts.draw(win);
 
+	for (sf::RectangleShape & r : wallSprites)
+		win.draw(r);
 	//turtle.draw(win);
 	mario.draw(win);
 
