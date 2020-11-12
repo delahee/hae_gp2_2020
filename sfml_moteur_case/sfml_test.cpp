@@ -21,10 +21,17 @@ int main()
     sf::RenderWindow window(sf::VideoMode(1280, 720,32), "SFML works!");
 	window.setVerticalSyncEnabled(true);
     Font font;
+
     if (!font.loadFromFile("res/MAIAN.TTF")) {
         cout << "ERROR NO FONT" << endl;
         return 1;
     }
+
+	if (!sf::Shader::isAvailable())
+	{
+		cout << "ERROR NO SHADER SYSTEM" << endl;
+		return 1;
+	}
 
     Game g(&window);
 
@@ -40,7 +47,6 @@ int main()
 	fpsCounter.setFont(font);
 	fpsCounter.setString("FPS:");
 
-
 	double frameStart = 0.0;
 	double frameEnd = 0.0;
     while (window.isOpen())
@@ -51,8 +57,8 @@ int main()
 		if (dt < 0.001) {
 			dt = 0.001;
 		}
-        sf::Event event;
 
+        sf::Event event;
         while (window.pollEvent(event))//sort un evenement de la liste pour le traiter
             g.processInput(event);
 

@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClCompile Include="Char.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="HotReloadShader.cpp" />
     <ClCompile Include="sfml_test.cpp" />
     <ClCompile Include="Turtle.cpp" />
   </ItemGroup>
@@ -151,6 +152,7 @@
     <ClInclude Include="Char.hpp" />
     <ClInclude Include="Dice.hpp" />
     <ClInclude Include="Game.hpp" />
+    <ClInclude Include="HotReloadShader.hpp" />
     <ClInclude Include="Interp.hpp" />
     <ClInclude Include="Lib.hpp" />
     <ClInclude Include="Particle.hpp" />

@@ -12,10 +12,14 @@
 
 using namespace sf;
 
+class HotReloadShader;
 class Game {
 public:
 	sf::RenderWindow*	win = nullptr;
+
 	sf::RectangleShape  bg;
+	HotReloadShader *	bgShader = nullptr;
+
 	sf::Texture			tex;
 
 	Char				mario;
@@ -28,6 +32,9 @@ public:
 
 	ParticleMan beforeParts;
 	ParticleMan afterParts;
+
+
+	
 
 	Game(sf::RenderWindow * win);
 

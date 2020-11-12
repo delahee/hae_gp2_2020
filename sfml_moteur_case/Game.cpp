@@ -1,5 +1,6 @@
 #include "Char.hpp"
 #include "Game.hpp"
+#include "HotReloadShader.hpp"
 
 #ifdef _MSC_VER
 #define _CRT_SECURE_NO_WARNINGS
@@ -19,6 +20,7 @@ Game::Game(sf::RenderWindow * win) {
 	bg.setTexture(&tex);
 	bg.setSize(sf::Vector2f(1280, 720));
 
+	bgShader = new HotReloadShader("res/bg.vert", "res/bg_time.frag");
 	
 	for (int i = 0; i < 1280 / Char::GRID_SIZE; ++i) {
 		walls.push_back( Vector2i(i, lastLine) );
@@ -91,10 +93,39 @@ void Game::processInput(sf::Event ev) {
 	}
 }
 
+
+static float g_time = 0.0;
+static float g_tickTimer = 0.0;
+void Game::update(double dt) {
+	pollInput(dt);
+
+	g_time += dt;
+	if (bgShader) bgShader->update(dt);
+
+	beforeParts.update(dt);
+
+	mario.update(dt);
+
+	afterParts.update(dt);
+
+	g_tickTimer -= dt;
+	if (g_tickTimer <= 0.0) {
+		onFileTick();
+		g_tickTimer = 0.1;
+	}
+}
+
  void Game::draw(sf::RenderWindow & win) {
 	if (closing) return;
 
-	win.draw(bg);
+	sf::RenderStates states = sf::RenderStates::Default;
+	sf::Shader * sh = &bgShader->sh;
+	///states.texture = bg.getTexture();
+	states.blendMode = sf::BlendAdd;
+	states.shader = sh;
+	sh->setUniform("texture", tex);
+	sh->setUniform("time", g_time);
+	win.draw(bg, states);
 
 	beforeParts.draw(win);
 
@@ -120,6 +151,13 @@ void Game::pollInput(double dt) {
 		mario.speedX += lateralSpeed;
 		if (mario.speedX > maxSpeed)
 			mario.speedX = maxSpeed;
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
+		if (mario.state != Jumping) {
+			mario.speedY = -100;
+			mario.state = Jumping;
+		}
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::T)) {
@@ -155,19 +193,3 @@ bool Game::isWall(int cx, int cy)
 	return false;
 }
 
-static float timer = 0.0;
-void Game::update(double dt) {
-	pollInput(dt);
-
-	beforeParts.update(dt);
-	
-	mario.update(dt);
-
-	afterParts.update(dt);
-
-	timer -= dt;
-	if (timer <= 0.0) {
-		onFileTick();
-		timer = 0.1;
-	}
-}

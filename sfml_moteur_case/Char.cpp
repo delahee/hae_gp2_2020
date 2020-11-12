@@ -1,8 +1,7 @@
 #include "Char.hpp"
 #include "Game.hpp"
 
-void Char::setCellPosition(int cx, int cy)
-{
+void Char::setCellPosition(int cx, int cy){
 	rx = 0.5;
 	ry = 0.99;
 	this->cx = cx;
@@ -55,6 +54,7 @@ void Char::update(double dt) {
 			if (isWallHit(cx, cy+1)) {
 				ry = 0.99;
 				speedY = 0.0;
+				speedX *= 0.5;
 				state = Running;
 				break;
 			}
