@@ -33,6 +33,11 @@ Game::Game(sf::RenderWindow * win) {
 	walls.push_back(Vector2i(cols-1, lastLine - 1));
 	walls.push_back(Vector2i(cols-1, lastLine - 2));
 	walls.push_back(Vector2i(cols-1, lastLine - 3));
+
+	walls.push_back(Vector2i(cols >>2, lastLine - 2));
+	walls.push_back(Vector2i(cols >>2, lastLine - 3));
+	walls.push_back(Vector2i(cols >>2, lastLine - 4));
+	walls.push_back(Vector2i((cols >> 2) + 1, lastLine - 4));
 	cacheWalls();
 	//mario.setPosition((int)1280 * 0.5, 720);
 

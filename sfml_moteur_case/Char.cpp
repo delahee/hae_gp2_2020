@@ -50,7 +50,14 @@ void Char::update(double dt) {
 	}
 
 	if (state == Jumping) {
-		while (ry > 0.99) {
+		if (speedY > 0)
+		while (ry < 0) {
+			ry++;
+			cy--;
+		}
+
+		if(speedY > 0)
+		while (  ry > 0.99) {
 			if (isWallHit(cx, cy+1)) {
 				ry = 0.99;
 				speedY = 0.0;
@@ -62,6 +69,12 @@ void Char::update(double dt) {
 				ry--;
 				cy++;
 			}
+		}
+	}
+
+	if (state == Running) {
+		if (!isWallHit(cx, cy + 1)) {
+			state = Jumping;
 		}
 	}
 
