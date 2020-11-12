@@ -18,9 +18,21 @@ void Char::setPosition(int rpx, int rpy) {
 }
 
 void Char::update(double dt) {
+
+	if (state == Jumping) {
+		speedY += gravityY;
+	}
+
+	if (speedY > maxFallSpeedY) {
+		//speedY = maxFallSpeedY;
+	}
+
+	rx += speedX * dt;
+	ry += speedY * dt;
+
 	while (rx > 1) {
 		if (isWallHit(cx + 1, cy)) {
-			rx = 0.5;
+			rx = 0.95;
 		}
 		else {
 			rx--;
@@ -30,13 +42,30 @@ void Char::update(double dt) {
 
 	while (rx < 0) {
 		if (isWallHit(cx - 1, cy)) {
-			rx = 0.5;
+			rx = 0.05;
 		}
 		else {
 			rx++;
 			cx--;
 		}
 	}
+
+	if (state == Jumping) {
+		while (ry > 0.99) {
+			if (isWallHit(cx, cy+1)) {
+				ry = 0.99;
+				speedY = 0.0;
+				state = Running;
+				break;
+			}
+			else {
+				ry--;
+				cy++;
+			}
+		}
+	}
+
+	speedX *= 0.87;
 
 	spr.setPosition(getPositionPixel());
 }

@@ -56,6 +56,7 @@ void Game::processInput(sf::Event ev) {
 		return;
 	}
 	if (ev.type == sf::Event::KeyReleased) {
+		/*
 		if (ev.key.code == sf::Keyboard::Key::Z) {
 		}
 			
@@ -64,12 +65,11 @@ void Game::processInput(sf::Event ev) {
 		}
 		
 		if (ev.key.code == sf::Keyboard::Key::Q) {
-			mario.rx -= 0.1;
 		}
 		
 		if (ev.key.code == sf::Keyboard::Key::D) {
-			mario.rx += 0.1;
 		}
+		*/
 
 		if (ev.key.code == sf::Keyboard::Key::R) {
 			mario.setCellPosition(cols >> 1, lastLine-1);
@@ -107,12 +107,24 @@ void Game::processInput(sf::Event ev) {
 }
 
 void Game::pollInput(double dt) {
+
+	float lateralSpeed = 8.0;
+	float maxSpeed = 40.0;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q)) {
-		mario.rx -= 0.5 * dt  * 60.0;
+		mario.speedX -= lateralSpeed;
+		if (mario.speedX < -maxSpeed)
+			mario.speedX = -maxSpeed;
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-		mario.rx += 0.5 * dt  * 60.0;
+		mario.speedX += lateralSpeed;
+		if (mario.speedX > maxSpeed)
+			mario.speedX = maxSpeed;
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::T)) {
+		mario.setCellPosition(cols >> 1, lastLine - 30);
+		mario.state = Jumping;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
 		if (!wasPressed) {

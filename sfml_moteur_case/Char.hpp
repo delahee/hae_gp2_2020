@@ -6,6 +6,11 @@ using namespace sf;
 
 class Game;
 
+enum State {
+	Jumping,//
+	Running,
+};
+
 class Char {
 public:
 	static constexpr int GRID_SIZE = 16;
@@ -19,6 +24,13 @@ public:
 		spr.setOrigin(8, 64);
 		this->game = g;
 	}
+
+	float speedX = 0.0;//rx par secondes
+	float speedY = 0.0;//rx par secondes
+
+	float maxFallSpeedY = 80.0;
+	float gravityY = 4;
+	State state = Running;
 
 	int cx = 0;
 	float rx = 0.0;
