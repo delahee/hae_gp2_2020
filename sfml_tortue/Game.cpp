@@ -107,9 +107,9 @@ void Game::onSpacePressed() {
 }
 
 static time_t lastModification = 0;
+static struct stat statDesc;
 
 void Game::onFileTick() {
-	struct stat statDesc;
 	stat("res/cmd.txt", &statDesc);
 
 	if (lastModification < statDesc.st_mtime) {

@@ -43,4 +43,5 @@ public:
 	void draw(sf::RenderWindow& win);
 
 	void onFileTick();
+	bool isWall(int cx, int cy);
 };

@@ -4,16 +4,20 @@
 
 using namespace sf;
 
+class Game;
+
 class Char {
 public:
 	static constexpr int GRID_SIZE = 16;
 
 	sf::RectangleShape	spr;
+	Game*				game = nullptr;
 
-	Char() {
+	Char(Game*g=nullptr) {
 		spr = RectangleShape(Vector2f(16,64));
 		spr.setFillColor(sf::Color(0xFA3092ff));
 		spr.setOrigin(8, 64);
+		this->game = g;
 	}
 
 	int cx = 0;
@@ -35,4 +39,5 @@ public:
 			win.draw(spr);
 	}
 
+	bool isWallHit(int cx, int cy);
 };

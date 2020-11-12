@@ -1,9 +1,10 @@
 #include "Char.hpp"
+#include "Game.hpp"
 
 void Char::setCellPosition(int cx, int cy)
 {
 	rx = 0.5;
-	ry = 0.0;
+	ry = 0.99;
 	this->cx = cx;
 	this->cy = cy;
 }
@@ -17,17 +18,30 @@ void Char::setPosition(int rpx, int rpy) {
 }
 
 void Char::update(double dt) {
-	if (rx > 1)
-		while (rx > 1) {
+	while (rx > 1) {
+		if (isWallHit(cx + 1, cy)) {
+			rx = 0.5;
+		}
+		else {
 			rx--;
 			cx++;
 		}
+	}
 
-	if (rx < 0)
-		while (rx < 0) {
+	while (rx < 0) {
+		if (isWallHit(cx - 1, cy)) {
+			rx = 0.5;
+		}
+		else {
 			rx++;
 			cx--;
 		}
+	}
 
 	spr.setPosition(getPositionPixel());
+}
+
+bool Char::isWallHit(int cx, int cy)
+{
+	return game->isWall(cx,cy);
 }

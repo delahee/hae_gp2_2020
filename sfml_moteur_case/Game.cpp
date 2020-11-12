@@ -1,8 +1,12 @@
+#include "Char.hpp"
 #include "Game.hpp"
 
 #ifdef _MSC_VER
 #define _CRT_SECURE_NO_WARNINGS
 #endif
+
+static int cols = 1280 / Char::GRID_SIZE;
+static int lastLine = 720 / Char::GRID_SIZE - 1;
 
 Game::Game(sf::RenderWindow * win) {
 	this->win = win;
@@ -15,14 +19,23 @@ Game::Game(sf::RenderWindow * win) {
 	bg.setTexture(&tex);
 	bg.setSize(sf::Vector2f(1280, 720));
 
-	int cols = 1280 / Char::GRID_SIZE;
-	int lastLine = 720 / Char::GRID_SIZE - 1;
+	
 	for (int i = 0; i < 1280 / Char::GRID_SIZE; ++i) {
 		walls.push_back( Vector2i(i, lastLine) );
 	}
+
+	walls.push_back(Vector2i(0, lastLine-1));
+	walls.push_back(Vector2i(0, lastLine-2));
+	walls.push_back(Vector2i(0, lastLine-3));
+
+	walls.push_back(Vector2i(cols-1, lastLine - 1));
+	walls.push_back(Vector2i(cols-1, lastLine - 2));
+	walls.push_back(Vector2i(cols-1, lastLine - 3));
 	cacheWalls();
 	//mario.setPosition((int)1280 * 0.5, 720);
-	mario.setCellPosition(cols>>1, lastLine);
+
+	mario = Char(this);
+	mario.setCellPosition(cols>>1, lastLine-1);
 }
 
 void Game::cacheWalls()
@@ -51,15 +64,15 @@ void Game::processInput(sf::Event ev) {
 		}
 		
 		if (ev.key.code == sf::Keyboard::Key::Q) {
-			//mario.rx -= 0.1;
+			mario.rx -= 0.1;
 		}
 		
 		if (ev.key.code == sf::Keyboard::Key::D) {
-			//mario.rx += 0.1;
+			mario.rx += 0.1;
 		}
 
 		if (ev.key.code == sf::Keyboard::Key::R) {
-			mario.setPosition(640, 720);
+			mario.setCellPosition(cols >> 1, lastLine-1);
 		}
 
 		if (ev.key.code == sf::Keyboard::Key::F) {
@@ -119,6 +132,15 @@ void Game::onSpacePressed() {
 
 void Game::onFileTick() {
 	
+}
+
+bool Game::isWall(int cx, int cy)
+{
+	for (Vector2i & w : walls) {
+		if (w.x == cx && w.y == cy)
+			return true;
+	}
+	return false;
 }
 
 static float timer = 0.0;
