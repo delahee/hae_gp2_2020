@@ -6,8 +6,7 @@ void Char::setCellPosition(int cx, int cy){
 	ry = 0.99;
 	this->cx = cx;
 	this->cy = cy;
-	state = Running;
-	updateState = doRunningState;
+	setState( Running );
 }
 
 void Char::setPosition(int rpx, int rpy) {
@@ -51,54 +50,43 @@ void Char::update(double dt) {
 		}
 	}
 
-	if (updateState) {
-		updateState(this);
+	
+	if (updateState2) {
+		updateState2(*this);
 	}
 
-	/*
-	if (state == Jumping) {
-		doJumpingState();
-	}
-	else 
-	if (state == Running) {
-		doRunningState();
-	}
-	*/
 
 	speedX *= 0.87;
 
 	spr.setPosition(getPositionPixel());
 }
 
-void Char::doRunningState(Char*lthis) {
-	int cx = lthis->cx;
-	int cy = lthis->cy;
-	if (!lthis->isWallHit(cx, cy + 1)) {
-		lthis->updateState = doJumpingState;
-		lthis->state = Jumping;
+void Char::doRunningState() {
+	if (!isWallHit(cx, cy + 1)) {
+		setState(Jumping);
 	}
 }
 
-void Char::doJumpingState(Char* lthis) {
-	if (lthis->speedY < 0)
-		while (lthis->ry < 0) {
-			lthis->ry++;
-			lthis->cy--;
+
+void Char::doJumpingState() {
+	if (speedY < 0)
+		while (ry < 0) {
+			ry++;
+			cy--;
 		}
 
-	if (lthis->speedY > 0)
-		while (lthis->ry > 0.99) {
-			if (lthis->isWallHit(lthis->cx, lthis->cy + 1)) {
-				lthis->ry = 0.99;
-				lthis->speedY = 0.0;
-				lthis->speedX *= 0.5;
-				lthis->state = Running;
-				lthis->updateState = doRunningState;
+	if (speedY > 0)
+		while (ry > 0.99) {
+			if (isWallHit(cx, cy + 1)) {
+				ry = 0.99;
+				speedY = 0.0;
+				speedX *= 0.5;
+				setState(Running);
 				break;
 			}
 			else {
-				lthis->ry--;
-				lthis->cy++;
+				ry--;
+				cy++;
 			}
 		}
 }
@@ -106,11 +94,10 @@ void Char::doJumpingState(Char* lthis) {
 void Char::setState(State st){
 	state = st;
 	if (st == Running) {
-		
-		updateState = doRunningState;
+		updateState2 = std::mem_fn(&Char::doRunningState);
 	}
 	else if (st == Jumping) {
-		updateState = doJumpingState;
+		updateState2 = std::mem_fn(&Char::doJumpingState);
 	}
 }
 

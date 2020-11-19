@@ -55,7 +55,9 @@ public:
 	void setState(State st);
 	bool isWallHit(int cx, int cy);
 
-	static void doJumpingState(Char *);
-	static void doRunningState(Char*);
-	std::function<void(Char *)> updateState;
+	void doRunningState();
+	void doJumpingState();
+	std::function<void(Char&)> updateState2;
+
+	//std::mem_fn<Char::*,void(void)> test;
 };
