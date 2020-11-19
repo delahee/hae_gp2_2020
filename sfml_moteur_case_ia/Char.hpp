@@ -12,6 +12,29 @@ enum State {
 	Running,
 };
 
+
+class CState {
+public:
+		Char* lthis;
+		virtual void	updateState() = 0; 
+};
+
+class CRunningState : public CState {
+public:
+	virtual void	updateState() override { 
+		//???
+	};
+};
+
+class CJumpingState : public CState {
+public:
+	virtual void	updateState() override  {
+		//???
+	};
+};
+
+
+
 class Char {
 public:
 	static constexpr int GRID_SIZE = 16;
