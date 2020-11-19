@@ -12,6 +12,7 @@ enum State {
 	Running,
 };
 
+class Char;
 
 class CState {
 public:
