@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SFML/Graphics.hpp"
+#include <functional>
 
 using namespace sf;
 
@@ -32,11 +33,11 @@ public:
 	float gravityY = 4;
 	State state = Running;
 
-	int cx = 0;
-	float rx = 0.0;
+	int		cx = 0;
+	float	rx = 0.0;
 
-	int cy = 0;
-	float ry = 0.0;
+	int		cy = 0;
+	float	ry = 0.0;
 
 	void setCellPosition(int cx, int cy);
 	void setPosition(int rpx, int rpy);
@@ -51,5 +52,10 @@ public:
 			win.draw(spr);
 	}
 
+	void setState(State st);
 	bool isWallHit(int cx, int cy);
+
+	static void doJumpingState(Char *);
+	static void doRunningState(Char*);
+	std::function<void(Char *)> updateState;
 };

@@ -177,13 +177,13 @@ void Game::pollInput(double dt) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
 		if (mario.state != Jumping) {
 			mario.speedY = -100;
-			mario.state = Jumping;
+			mario.setState(Jumping);
 		}
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::T)) {
 		mario.setCellPosition(cols >> 1, lastLine - 30);
-		mario.state = Jumping;
+		mario.setState(Jumping);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
 		if (!wasPressed) {
