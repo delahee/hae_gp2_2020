@@ -51,23 +51,26 @@ void Char::update(double dt) {
 	}
 
 	
-	if (updateState2) {
-		updateState2(*this);
-	}
-
+	//if (updateState2) {
+	//	updateState2(*this);
+	//}
+	if (cupdateState)
+		cupdateState->updateState();
 
 	speedX *= 0.87;
 
 	spr.setPosition(getPositionPixel());
 }
 
+/*
 void Char::doRunningState() {
 	if (!isWallHit(cx, cy + 1)) {
 		setState(Jumping);
 	}
 }
+*/
 
-
+/*
 void Char::doJumpingState() {
 	if (speedY < 0)
 		while (ry < 0) {
@@ -90,18 +93,51 @@ void Char::doJumpingState() {
 			}
 		}
 }
+*/
 
 void Char::setState(State st){
 	state = st;
 	if (st == Running) {
-		updateState2 = std::mem_fn(&Char::doRunningState);
+		//updateState2 = std::mem_fn(&Char::doRunningState);
+		cupdateState = new CRunningState(this);
 	}
 	else if (st == Jumping) {
-		updateState2 = std::mem_fn(&Char::doJumpingState);
+		//updateState2 = std::mem_fn(&Char::doJumpingState);
+		cupdateState = new CJumpingState(this);
 	}
 }
 
 bool Char::isWallHit(int cx, int cy)
 {
 	return game->isWall(cx,cy);
+}
+
+void CJumpingState::updateState() {
+
+	if (c->speedY < 0)
+		while (c->ry < 0) {
+			c->ry++;
+			c->cy--;
+		}
+
+	if (c->speedY > 0)
+		while (c->ry > 0.99) {
+			if (c->isWallHit(c->cx, c->cy + 1)) {
+				c->ry = 0.99;
+				c->speedY = 0.0;
+				c->speedX *= 0.5;
+				c->setState(Running);
+				break;
+			}
+			else {
+				c->ry--;
+				c->cy++;
+			}
+		}
+}
+
+void CRunningState::updateState() {
+	if (!c->isWallHit(c->cx, c->cy + 1)) {
+		c->setState(Jumping);
+	}
 }

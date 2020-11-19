@@ -16,25 +16,24 @@ class Char;
 
 class CState {
 public:
-		Char* lthis;
+		Char* c = nullptr;
+		CState(Char* _c) : c(_c) {
+			//this->c = _c;
+		};
 		virtual void	updateState() = 0; 
 };
 
 class CRunningState : public CState {
 public:
-	virtual void	updateState() override { 
-		//???
-	};
+					CRunningState(Char* _c) : CState(_c) { };
+	virtual void	updateState() override;
 };
 
 class CJumpingState : public CState {
 public:
-	virtual void	updateState() override  {
-		//???
-	};
+					CJumpingState(Char* _c) : CState(_c) { };
+	virtual void	updateState() override;
 };
-
-
 
 class Char {
 public:
@@ -55,7 +54,11 @@ public:
 
 	float maxFallSpeedY = 80.0;
 	float gravityY = 4;
+
+
 	State state = Running;
+	CState* cupdateState = nullptr;
+
 
 	int		cx = 0;
 	float	rx = 0.0;
@@ -79,9 +82,9 @@ public:
 	void setState(State st);
 	bool isWallHit(int cx, int cy);
 
-	void doRunningState();
-	void doJumpingState();
-	std::function<void(Char&)> updateState2;
+	//void doRunningState();
+	//void doJumpingState();
+	//std::function<void(Char&)> updateState2;
 
 	//std::mem_fn<Char::*,void(void)> test;
 };
