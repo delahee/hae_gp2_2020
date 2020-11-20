@@ -64,6 +64,36 @@ void Char::update(double dt) {
 
 	switch (state)
 	{
+	case WalkTo:
+		/*
+		if (	isWallHit(cx, cy - 1)
+			||	 isWallHit(cx, cy + 1)
+			|| isWallHit(cx - 1, cy)
+			|| isWallHit(cx + 1, cy)
+			) {
+			stop(); 
+		}
+		*/
+		if (speedX > 0 && isWallHit(cx + 1, cy)) {
+			stop();
+		}
+		else if (speedX < 0 && isWallHit(cx - 1, cy)) {
+			stop();
+		}
+		else if (speedY < 0 && isWallHit(cx, cy -1)) {
+			stop();
+		}
+		else if (speedY >0 && isWallHit(cx, cy + 1)) {
+			stop();
+		}
+		else {
+			if ( (((int)destX) == cx) && (((int)destY) == cy)) {
+				speedX = 0.0;
+				speedY = 0.0;
+				setState(Idle);
+			}
+		}
+		break;
 	case Idle:
 		if (
 			isWallHit(cx, cy - 1)
@@ -94,16 +124,37 @@ void Char::update(double dt) {
 		break;
 	}
 
-	speedX *= 0.87;
-	speedY *= 0.87;
+	speedX *= frictX;
+	speedY *= frictY;
 
 	spr.setPosition(getPositionPixel());
 }
 
+void Char::stop() {
+	speedX = 0.0;
+	speedY = 0.0;
+	setState(Idle);
+}
+
+void Char::defaultFriction() {
+	frictX = 0.87;
+	frictY = 0.87;
+}
+
 void Char::setState(State st){
 	state = st;
+
+	destX = 0;
+	destY = 0;
+	defaultFriction();
+
 	switch (state)
 	{
+	case WalkTo:
+		spr.setFillColor(sf::Color(0x6a6a6aff));
+		frictX = 1.0;
+		frictY = 1.0;
+		break;
 	case Idle:
 		spr.setFillColor(sf::Color(0xffffffff));
 		break;

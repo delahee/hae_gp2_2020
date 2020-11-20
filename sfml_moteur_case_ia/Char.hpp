@@ -12,6 +12,7 @@ enum State {
 	Walking,
 	Running,
 	Cover,
+	WalkTo,
 };
 
 class Char;
@@ -45,6 +46,12 @@ public:
 	int		cy = 0;
 	float	ry = 0.0;
 
+	float frictX = 0.87;
+	float frictY = 0.87;
+
+	float destX = 0;
+	float destY = 0;
+
 	void setCellPosition(int cx, int cy);
 	void setPosition(int rpx, int rpy);
 
@@ -54,9 +61,13 @@ public:
 
 	void update(double dt);
 
+	void stop();
+
 	void draw(sf::RenderWindow & win) {
 			win.draw(spr);
 	}
+
+	void defaultFriction();
 
 	void setState(State st);
 	bool isWallHit(int cx, int cy);
