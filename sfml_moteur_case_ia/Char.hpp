@@ -8,25 +8,14 @@ using namespace sf;
 class Game;
 
 enum State {
+	Idle,
+	Walking,
 	Running,
+	Cover,
 };
 
 class Char;
 
-class CState {
-public:
-		Char* c = nullptr;
-		CState(Char* _c) : c(_c) {
-			//this->c = _c;
-		};
-		virtual void	updateState() = 0; 
-};
-
-class CRunningState : public CState {
-public:
-					CRunningState(Char* _c) : CState(_c) { };
-	virtual void	updateState() override;
-};
 
 class Char {
 public:
@@ -48,8 +37,7 @@ public:
 	//float maxFallSpeedY = 80.0;
 	//float gravityY = 4;
 
-	State state = Running;
-	CState* cupdateState = nullptr;
+	State state = Idle;
 
 	int		cx = 0;
 	float	rx = 0.0;

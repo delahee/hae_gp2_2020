@@ -192,19 +192,31 @@ void Game::update(double dt) {
 
 void Game::pollInput(double dt) {
 
-	float lateralSpeed = 2.0;
-	float maxSpeed = 20.0;
+	float lateralSpeed = 1.0;
+	float maxSpeed = 10.0;
 
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
+		mario.setState(Running);
+	}
+
+	if (mario.state == Running) {
+		lateralSpeed *= 2.0;
+		maxSpeed *= 10.0;
+	}
+
+	bool moved = false;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q)) {
 		mario.speedX -= lateralSpeed;
 		if (mario.speedX < -maxSpeed)
 			mario.speedX = -maxSpeed;
+		moved = true;
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
 		mario.speedX += lateralSpeed;
 		if (mario.speedX > maxSpeed)
 			mario.speedX = maxSpeed;
+		moved = true;
 	}
 
 
@@ -212,12 +224,24 @@ void Game::pollInput(double dt) {
 		mario.speedY -= lateralSpeed;
 		if (mario.speedY < -maxSpeed)
 			mario.speedY = -maxSpeed;
+		moved = true;
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
 		mario.speedY += lateralSpeed;
-		if (mario.speedY < maxSpeed)
+		if (mario.speedY > maxSpeed)
 			mario.speedY = maxSpeed;
+		moved = true;
+	}
+
+	if (moved) {
+		if (mario.state == Cover)
+			mario.setState(Walking);
+		//walkin  nope 
+		//running nope
+		if (mario.state == Idle)
+			mario.setState(Walking);
+
 	}
 	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {

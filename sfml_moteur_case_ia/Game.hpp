@@ -31,7 +31,6 @@ public:
 	Char				mario;
 
 	bool				closing = false;
-
 	
 	std::vector<sf::Vector2i>		walls;
 	std::vector<sf::RectangleShape> wallSprites;

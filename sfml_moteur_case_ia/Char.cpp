@@ -19,7 +19,6 @@ void Char::setPosition(int rpx, int rpy) {
 
 void Char::update(double dt) {
 
-
 	rx += speedX * dt;
 	ry += speedY * dt;
 
@@ -63,12 +62,37 @@ void Char::update(double dt) {
 		}
 	}
 
-	
-	//if (updateState2) {
-	//	updateState2(*this);
-	//}
-	if (cupdateState)
-		cupdateState->updateState();
+	switch (state)
+	{
+	case Idle:
+		if (
+			isWallHit(cx, cy - 1)
+			|| isWallHit(cx, cy + 1)
+			|| isWallHit(cx - 1, cy)
+			|| isWallHit(cx + 1, cy)
+			) {
+			setState(Cover);
+		}
+		break;
+	case Cover:
+		break;
+	case Walking:
+		if ((abs(speedX) < 0.01) && (abs(speedY) < 0.01)) {
+			speedX = 0.0;
+			speedY = 0.0;
+			setState(Idle);
+		}
+		break;
+	case Running:
+		if ((abs(speedX) < 0.01) && (abs(speedY) < 0.01)) {
+			speedX = 0.0;
+			speedY = 0.0;
+			setState(Idle);
+		}
+		break;
+	default:
+		break;
+	}
 
 	speedX *= 0.87;
 	speedY *= 0.87;
@@ -76,47 +100,25 @@ void Char::update(double dt) {
 	spr.setPosition(getPositionPixel());
 }
 
-/*
-void Char::doRunningState() {
-	if (!isWallHit(cx, cy + 1)) {
-		setState(Jumping);
-	}
-}
-*/
-
-/*
-void Char::doJumpingState() {
-	if (speedY < 0)
-		while (ry < 0) {
-			ry++;
-			cy--;
-		}
-
-	if (speedY > 0)
-		while (ry > 0.99) {
-			if (isWallHit(cx, cy + 1)) {
-				ry = 0.99;
-				speedY = 0.0;
-				speedX *= 0.5;
-				setState(Running);
-				break;
-			}
-			else {
-				ry--;
-				cy++;
-			}
-		}
-}
-*/
-
 void Char::setState(State st){
 	state = st;
-	if (st == Running) {
-		//updateState2 = std::mem_fn(&Char::doRunningState);
-		delete(cupdateState);
-		cupdateState = new CRunningState(this);
+	switch (state)
+	{
+	case Idle:
+		spr.setFillColor(sf::Color(0xffffffff));
+		break;
+	case Cover:
+		spr.setFillColor(sf::Color(0xF0E452ff));
+		break;
+	case Walking:
+		spr.setFillColor(sf::Color(0x57FAB1ff));
+		break;
+	case Running:
+		spr.setFillColor(sf::Color(0xF75E59ff));
+		break;
+	default:
+		break;
 	}
-	
 }
 
 bool Char::isWallHit(int cx, int cy)
@@ -124,6 +126,3 @@ bool Char::isWallHit(int cx, int cy)
 	return game->isWall(cx,cy);
 }
 
-void CRunningState::updateState() {
-	
-}
