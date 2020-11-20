@@ -192,8 +192,9 @@ void Game::update(double dt) {
 
 void Game::pollInput(double dt) {
 
-	float lateralSpeed = 8.0;
-	float maxSpeed = 40.0;
+	float lateralSpeed = 2.0;
+	float maxSpeed = 20.0;
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q)) {
 		mario.speedX -= lateralSpeed;
 		if (mario.speedX < -maxSpeed)
@@ -206,17 +207,19 @@ void Game::pollInput(double dt) {
 			mario.speedX = maxSpeed;
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
-		if (mario.state != Jumping) {
-			mario.speedY = -100;
-			mario.setState(Jumping);
-		}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z)) {
+		mario.speedY -= lateralSpeed;
+		if (mario.speedY < -maxSpeed)
+			mario.speedY = -maxSpeed;
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::T)) {
-		mario.setCellPosition(cols >> 1, lastLine - 30);
-		mario.setState(Jumping);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
+		mario.speedY += lateralSpeed;
+		if (mario.speedY < maxSpeed)
+			mario.speedY = maxSpeed;
 	}
+	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
 		if (!wasPressed) {
 			onSpacePressed();

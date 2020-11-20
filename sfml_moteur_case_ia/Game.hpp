@@ -38,8 +38,6 @@ public:
 
 	ParticleMan beforeParts;
 	ParticleMan afterParts;
-
-
 	
 
 	Game(sf::RenderWindow * win);

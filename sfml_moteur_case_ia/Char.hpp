@@ -8,7 +8,6 @@ using namespace sf;
 class Game;
 
 enum State {
-	Jumping,//
 	Running,
 };
 
@@ -29,12 +28,6 @@ public:
 	virtual void	updateState() override;
 };
 
-class CJumpingState : public CState {
-public:
-					CJumpingState(Char* _c) : CState(_c) { };
-	virtual void	updateState() override;
-};
-
 class Char {
 public:
 	static constexpr int GRID_SIZE = 16;
@@ -43,22 +36,20 @@ public:
 	Game*				game = nullptr;
 
 	Char(Game*g=nullptr) {
-		spr = RectangleShape(Vector2f(16,64));
+		spr = RectangleShape(Vector2f(16,16*3));
 		spr.setFillColor(sf::Color(0xFA3092ff));
-		spr.setOrigin(8, 64);
+		spr.setOrigin(8, 16*2.5);
 		this->game = g;
 	}
 
 	float speedX = 0.0;//rx par secondes
 	float speedY = 0.0;//rx par secondes
 
-	float maxFallSpeedY = 80.0;
-	float gravityY = 4;
-
+	//float maxFallSpeedY = 80.0;
+	//float gravityY = 4;
 
 	State state = Running;
 	CState* cupdateState = nullptr;
-
 
 	int		cx = 0;
 	float	rx = 0.0;
