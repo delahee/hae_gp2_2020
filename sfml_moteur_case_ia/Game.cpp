@@ -12,15 +12,26 @@ static int lastLine = 720 / Char::GRID_SIZE - 1;
 Game::Game(sf::RenderWindow * win) {
 	this->win = win;
 	bg = sf::RectangleShape(Vector2f(win->getSize().x, win->getSize().y));
+	displace = sf::RectangleShape(Vector2f(1280,720));
 
 	bool isOk = tex.loadFromFile("res/bg.jpg");
 	if (!isOk) {
 		printf("ERR : LOAD FAILED\n");
 	}
+
+	isOk = tex2.loadFromFile("res/bg2.jpg");
+	if (!isOk)  printf("ERR : LOAD FAILED\n");
+	
+	isOk = displaceMap.loadFromFile("res/nm.png");
+	if (!isOk)  printf("ERR : LOAD FAILED\n");
+
 	bg.setTexture(&tex);
+	displace.setTexture(&tex);
 	bg.setSize(sf::Vector2f(1280, 720));
 
 	bgShader = new HotReloadShader("res/bg.vert", "res/bg_time.frag");
+	doubleShader = new HotReloadShader("res/bg.vert", "res/double.frag");
+	displaceShader = new HotReloadShader("res/bg.vert", "res/displace.frag");
 	
 	for (int i = 0; i < 1280 / Char::GRID_SIZE; ++i) {
 		walls.push_back( Vector2i(i, lastLine) );
@@ -122,6 +133,8 @@ void Game::update(double dt) {
 
 	g_time += dt;
 	if (bgShader) bgShader->update(dt);
+	if (doubleShader) doubleShader->update(dt);
+	if (displaceShader) displaceShader->update(dt);
 
 	beforeParts.update(dt);
 
@@ -139,14 +152,33 @@ void Game::update(double dt) {
  void Game::draw(sf::RenderWindow & win) {
 	if (closing) return;
 
-	sf::RenderStates states = sf::RenderStates::Default;
-	sf::Shader * sh = &bgShader->sh;
-	///states.texture = bg.getTexture();
-	states.blendMode = sf::BlendAdd;
-	states.shader = sh;
-	sh->setUniform("texture", tex);
-	sh->setUniform("time", g_time);
-	win.draw(bg, states);
+	{
+		sf::RenderStates states = sf::RenderStates::Default;
+		sf::Shader* sh = &bgShader->sh;
+		//sf::Shader * sh = &doubleShader->sh;
+		//states.blendMode = sf::BlendAdd;
+		states.shader = sh;
+		sh->setUniform("texture", tex);
+		/*
+		sh->setUniform("texture2", tex2);
+		sh->setUniform("uvTranslate", Glsl::Vec2::Vector2(0,0));
+		sh->setUniform("uvScale", Glsl::Vec2::Vector2(1,1));
+		*/
+		sh->setUniform("time", g_time);
+		win.draw(bg, states);
+	}
+
+	{
+		sf::RenderStates states = sf::RenderStates::Default;
+		sf::Shader* sh = &displaceShader->sh;
+		states.shader = sh;
+		sh->setUniform("texture", tex);
+		sh->setUniform("texture2", displaceMap);
+		sh->setUniform("uvTranslateDisp", Glsl::Vec2::Vector2(0, 0));
+		sh->setUniform("uvScaleDisp", Glsl::Vec2::Vector2(1, 1));
+		sh->setUniform("time", g_time);
+		win.draw(displace, states);
+	}
 
 	beforeParts.draw(win);
 

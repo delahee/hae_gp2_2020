@@ -19,8 +19,14 @@ public:
 
 	sf::RectangleShape  bg;
 	HotReloadShader *	bgShader = nullptr;
+	HotReloadShader *	doubleShader = nullptr;
+	HotReloadShader *	displaceShader = nullptr;
 
 	sf::Texture			tex;
+	sf::Texture			tex2;
+	sf::Texture			displaceMap;
+
+	sf::RectangleShape	displace;
 
 	Char				mario;
 

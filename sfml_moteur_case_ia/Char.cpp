@@ -99,10 +99,12 @@ void Char::setState(State st){
 	state = st;
 	if (st == Running) {
 		//updateState2 = std::mem_fn(&Char::doRunningState);
+		delete(cupdateState);
 		cupdateState = new CRunningState(this);
 	}
 	else if (st == Jumping) {
 		//updateState2 = std::mem_fn(&Char::doJumpingState);
+		delete(cupdateState);
 		cupdateState = new CJumpingState(this);
 	}
 }
