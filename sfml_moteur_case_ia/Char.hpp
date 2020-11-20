@@ -55,6 +55,8 @@ public:
 	void setCellPosition(int cx, int cy);
 	void setPosition(int rpx, int rpy);
 
+	
+
 	Vector2f getPositionPixel() {
 		return Vector2f(cx*GRID_SIZE + rx * GRID_SIZE, cy*GRID_SIZE + ry * GRID_SIZE);
 	}
@@ -71,7 +73,7 @@ public:
 
 	void setState(State st);
 	bool isWallHit(int cx, int cy);
-
+	void onWallCollision();
 	//void doRunningState();
 	//void doJumpingState();
 	//std::function<void(Char&)> updateState2;

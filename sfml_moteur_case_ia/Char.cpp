@@ -17,6 +17,10 @@ void Char::setPosition(int rpx, int rpy) {
 	ry = rpy - (cy * GRID_SIZE);
 }
 
+void Char::onWallCollision() {
+	if (state == WalkTo) stop();
+}
+
 void Char::update(double dt) {
 
 	rx += speedX * dt;
@@ -25,6 +29,7 @@ void Char::update(double dt) {
 	while (rx > 1) {
 		if (isWallHit(cx + 1, cy)) {
 			rx = 0.95;
+			onWallCollision();
 		}
 		else {
 			rx--;
@@ -35,6 +40,7 @@ void Char::update(double dt) {
 	while (rx < 0) {
 		if (isWallHit(cx - 1, cy)) {
 			rx = 0.05;
+			onWallCollision();
 		}
 		else {
 			rx++;
@@ -45,6 +51,7 @@ void Char::update(double dt) {
 	while (ry > 1) {
 		if (isWallHit(cx, cy+1)) {
 			ry = 0.95;
+			onWallCollision();
 		}
 		else {
 			ry--;
@@ -55,6 +62,7 @@ void Char::update(double dt) {
 	while (ry < 0) {
 		if (isWallHit(cx, cy-1)) {
 			ry = 0.05;
+			onWallCollision();
 		}
 		else {
 			ry++;
@@ -74,7 +82,8 @@ void Char::update(double dt) {
 			stop(); 
 		}
 		*/
-		if (speedX > 0 && isWallHit(cx + 1, cy)) {
+		/*
+		if (speedX > 0 && isWallHit( cx + 1, cy)) {
 			stop();
 		}
 		else if (speedX < 0 && isWallHit(cx - 1, cy)) {
@@ -86,7 +95,9 @@ void Char::update(double dt) {
 		else if (speedY >0 && isWallHit(cx, cy + 1)) {
 			stop();
 		}
-		else {
+		else 
+		*/
+		{
 			if ( (((int)destX) == cx) && (((int)destY) == cy)) {
 				speedX = 0.0;
 				speedY = 0.0;
