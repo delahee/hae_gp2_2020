@@ -80,7 +80,7 @@ public:
 
 	std::vector<sf::Vector2i> allNodes;//0,0 1,1 2,2=>mur ?
 
-	std::vector<sf::Vector2i> dij_pred;
+	std::unordered_map<sf::Vector2i, sf::Vector2i> dij_pred;
 	std::vector<float> d;
 	void dij_init(std::vector<sf::Vector2i> & g, Vector2i start);
 	bool dij_findMin(
@@ -89,5 +89,8 @@ public:
 		Vector2i& result);
 
 	void dij_update(Vector2i s1, Vector2i s2);
+	void dij_process();
+	std::vector<sf::Vector2i> dij_getNeighbours(Vector2i s1);
+
 };
 

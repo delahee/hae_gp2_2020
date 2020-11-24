@@ -129,6 +129,18 @@ int getKey(sf::Vector2i vec) {
 	 return sqrt(pow(s2.x - s1.x, 2) + pow(s2.y - s1.y, 2));
  }
 
+void Game::dij_init(std::vector<sf::Vector2i>& g, Vector2i start)
+{
+	d.clear();
+	d.resize(500000, 10000000);
+	dij_pred.clear();
+	for (auto& s : g) {
+		int key = getKey(s);
+		d[key] = 1000 * 1000 * 1000;
+	}
+	d[getKey(start)] = 0;
+}
+
 void Game::dij_update(Vector2i s1, Vector2i s2)
 {
 	int ks1 = getKey(s1);
@@ -136,19 +148,40 @@ void Game::dij_update(Vector2i s1, Vector2i s2)
 	float ndist = d[ks1] + dist(s1, s2);
 	if (d[ks2] > ndist ) {
 		d[ks2] = ndist;
-		dij_pred[ks2] = s1;
+		dij_pred[s2] = s1;
 	}
 }
 
-void Game::dij_init(std::vector<sf::Vector2i>& g, Vector2i start)
-{
-	d.clear();
-	d.resize(10000000);
-	for (auto& s : g) {
-		int key = getKey(s);
-		d[key] = 1000 * 1000 * 1000;
+vector<Vector2i> Game::dij_getNeighbours(Vector2i elem) {
+	vector<Vector2i> nei;
+	for (int x = -1; x <= 1; ++x) {
+		for (int y = -1; y <= 1; ++y) {
+			if (x == 0 && y == 0)
+				continue;
+
+			int nx = x + elem.x;
+			int ny = y + elem.y;
+			if (nx >= 0 && ny >= 0 && !isWall(nx, ny))
+				nei.push_back(Vector2i(nx, ny));
+		}
 	}
-	d[getKey(start)] = 0;
+	return nei;
+}
+
+void Game::dij_process() {
+	dij_init(allNodes, Vector2i(mario.cx,mario.cy));
+	vector<Vector2i> q = allNodes;
+	while (q.size()) {
+		Vector2i s1;
+		bool ok = dij_findMin(q, d, s1);
+		auto pos = std::find(q.begin(), q.end(), s1);
+		if (pos != q.end())
+			q.erase(pos);
+
+		vector<Vector2i> neighbours = dij_getNeighbours(s1);
+		for (auto& s2 : neighbours) 
+			dij_update(s1, s2);
+	}
 }
 
 
@@ -185,6 +218,13 @@ void Game::processInput(sf::Event ev) {
 			Vector2i res;
 			bool found = dij_findMin(q,d,res);
 			auto pos = 66;
+		}
+
+		if (ev.key.code == sf::Keyboard::Key::L) {
+			dij_process();
+
+			auto pos = 0;
+			
 		}
 		
 
@@ -284,7 +324,7 @@ void Game::update(double dt) {
 		sh->setUniform("texture", tex);
 		
 		sh->setUniform("time", g_time);
-		win.draw(bg, states);
+		//win.draw(bg, states);
 	}
 
 	{
@@ -296,7 +336,7 @@ void Game::update(double dt) {
 		sh->setUniform("uvTranslateDisp", Glsl::Vec2::Vector2(0, 0));
 		sh->setUniform("uvScaleDisp", Glsl::Vec2::Vector2(1, 1));
 		sh->setUniform("time", g_time);
-		win.draw(displace, states);
+		//win.draw(displace, states);
 	}
 
 	beforeParts.draw(win);
@@ -312,6 +352,17 @@ void Game::update(double dt) {
 		win.draw(sh);
 	}
 
+
+	sf::VertexArray va;
+	va.setPrimitiveType(sf::PrimitiveType::Lines);
+	
+	for( auto p : dij_pred) {
+		Vector2i f = p.first;
+		Vector2i s = p.second;
+		va.append(sf::Vertex(Vector2f(f.x * Char::GRID_SIZE, f.y * Char::GRID_SIZE), sf::Color::Green));
+		va.append(sf::Vertex(Vector2f(s.x * Char::GRID_SIZE, s.y * Char::GRID_SIZE), sf::Color::Magenta));
+	}
+	win.draw(va);
 
 	//turtle.draw(win);
 	mario.draw(win);
