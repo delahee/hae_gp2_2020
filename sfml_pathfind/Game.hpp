@@ -21,6 +21,18 @@ using namespace sf;
 // std::vector<sf::Vector2i>
 // std::vector<std::pair(int cx, intcy)>
 //
+using std::size_t;
+using std::hash;
+using std::string;
+namespace std {
+	template <>
+	struct hash<sf::Vector2i>{
+		std::size_t operator()(const sf::Vector2i& k) const{
+			return (hash<int>()(k.x) ^ (hash<int>()(k.y)) << 1);
+		};
+	};
+}
+
 class HotReloadShader;
 class Game {
 public:
@@ -68,6 +80,7 @@ public:
 
 	std::vector<sf::Vector2i> allNodes;//0,0 1,1 2,2=>mur ?
 
+	std::vector<sf::Vector2i> dij_pred;
 	std::vector<float> d;
 	void dij_init(std::vector<sf::Vector2i> & g, Vector2i start);
 	bool dij_findMin(
@@ -75,4 +88,6 @@ public:
 		std::vector<float>& d,
 		Vector2i& result);
 
+	void dij_update(Vector2i s1, Vector2i s2);
 };
+

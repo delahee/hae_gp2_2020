@@ -125,6 +125,21 @@ int getKey(sf::Vector2i vec) {
 	return isFound;
 }
 
+ static float dist(Vector2i s1, Vector2i s2) {
+	 return sqrt(pow(s2.x - s1.x, 2) + pow(s2.y - s1.y, 2));
+ }
+
+void Game::dij_update(Vector2i s1, Vector2i s2)
+{
+	int ks1 = getKey(s1);
+	int ks2 = getKey(s2);
+	float ndist = d[ks1] + dist(s1, s2);
+	if (d[ks2] > ndist ) {
+		d[ks2] = ndist;
+		dij_pred[ks2] = s1;
+	}
+}
+
 void Game::dij_init(std::vector<sf::Vector2i>& g, Vector2i start)
 {
 	d.clear();
@@ -386,5 +401,6 @@ bool Game::isWall(int cx, int cy)
 	}
 	return false;
 }
+
 
 
