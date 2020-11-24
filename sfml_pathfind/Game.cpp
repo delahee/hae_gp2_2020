@@ -75,6 +75,67 @@ void Game::createsNodes(){
 	}
 }
 
+/// x 0... bcp
+// y 0... bcp
+// ( combiné x et y ? )
+// x + y * (bcp +1) => key collisionnera ni avec x ni avec y
+
+struct ElementOfD{
+	sf::Vector2i	pos;
+	float		weight;
+};
+static std::vector<ElementOfD> d;
+
+
+void addToD(ElementOfD elem) {
+	d.push_back(elem);
+}
+
+bool getFromD(Vector2i pos, ElementOfD & result) {
+	for (ElementOfD& el : d) {
+		if (el.pos.x == pos.x && el.pos.y == pos.y) {
+			result = el;
+			return true;
+		}
+	}
+	return false;
+}
+
+int getKey(sf::Vector2i vec) {
+	return vec.x + (vec.y * 256);
+	//x = 0 => 0
+	//x =3 et y = 2
+	//key = 3 + 256*2 = 511
+	//=> moins de colonne que 256 
+}
+
+ bool Game::dij_findMin(std::vector<sf::Vector2i>& q, std::vector<float>& d, Vector2i & result) {
+	float min = 1000 * 1000 * 1000;
+	Vector2i vertex(-1, -1);
+	bool isFound = false;
+	for (auto& s : q) {
+
+		if( d[getKey(s)] < min){
+			min = d[getKey(s)];
+			vertex = s;
+			isFound = true;
+		}
+	}
+	result = vertex;
+	return isFound;
+}
+
+void Game::dij_init(std::vector<sf::Vector2i>& g, Vector2i start)
+{
+	d.clear();
+	d.resize(10000000);
+	for (auto& s : g) {
+		int key = getKey(s);
+		d[key] = 1000 * 1000 * 1000;
+	}
+	d[getKey(start)] = 0;
+}
+
 
 void Game::processInput(sf::Event ev) {
 	if (ev.type == sf::Event::Closed) {
@@ -93,10 +154,24 @@ void Game::processInput(sf::Event ev) {
 		
 		if (ev.key.code == sf::Keyboard::Key::Q) {
 		}
-		
-		if (ev.key.code == sf::Keyboard::Key::D) {
-		}
 		*/
+
+		if (ev.key.code == sf::Keyboard::Key::K) {
+			dij_init(allNodes, Vector2i(mario.cx, mario.cy));
+			std::vector<Vector2i> q;
+			q.push_back(Vector2i(66, 67));
+			q.push_back(Vector2i(66, 68));
+			q.push_back(Vector2i(66, 69));
+
+			std::vector<float> d;
+			d.resize(1024 * 1024,1000 * 1000);
+			d[getKey(Vector2i(66, 67))] = 3;
+			d[getKey(Vector2i(66, 68))] = 4;
+			Vector2i res;
+			bool found = dij_findMin(q,d,res);
+			auto pos = 66;
+		}
+		
 
 		if (ev.key.code == sf::Keyboard::Key::R) {
 			mario.setCellPosition(cols >> 1, lastLine-1);

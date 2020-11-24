@@ -10,6 +10,8 @@
 #include "Particle.hpp"
 #include "ParticleMan.hpp"
 #include "Char.hpp"
+#include <algorithm>
+#include <unordered_map>
 
 using namespace sf;
 
@@ -61,10 +63,16 @@ public:
 	void onFileTick();
 	bool isWall(int cx, int cy);
 
-
 	//creer la liste de toutes les cases pour dijkstra
 	void createsNodes();
 
 	std::vector<sf::Vector2i> allNodes;//0,0 1,1 2,2=>mur ?
-	std::unordered_map<sf::Vector2i, float> d;
+
+	std::vector<float> d;
+	void dij_init(std::vector<sf::Vector2i> & g, Vector2i start);
+	bool dij_findMin(
+		std::vector<sf::Vector2i>& q, 
+		std::vector<float>& d,
+		Vector2i& result);
+
 };
